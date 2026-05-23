@@ -1,0 +1,17 @@
+{
+  "name": "@inferops/react-api-sdk",
+  "private": true,
+  "description": "React client utilities for InferOps real-time incident monitoring and AI analysis platform.",
+  "dependencies": {
+    "@tanstack/react-query": "^5.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "keywords": [
+    "monitoring",
+    "inferops",
+    "api-client",
+    "sre"
+  ]
+}
