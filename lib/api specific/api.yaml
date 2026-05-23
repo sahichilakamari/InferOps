@@ -1,0 +1,107 @@
+openapi: 3.1.0
+info:
+  title: InferOps AI-powered SRE Platform
+  version: 0.1.0
+  description: 
+  
+    InferOps helps you detect, analyze, and resolve infrastructure incidents faster. 
+    
+    This API lets you do a lot, kind of like:
+    - Track active incidents and their impact on your services
+    - Get AI-based insights into what went sideways
+    - View your infrastructure well-being in real time
+    - Talk with an AI assistant about those incidents
+    - Produce detailed post incident reports automatically
+
+servers:
+  - url: /api
+    description: Our main endpoint, you know, the usual one
+
+tags:
+  - name: health
+    description: Quick health checks to see if the platform is working
+  - name: incidents
+    description: Everything incident related- create them track them, resolve them
+  - name: services
+    description: Your microservices and their current state
+  - name: metrics
+    description: Live and archived signals about your infrastructure performance
+  - name: logs
+    description: Access to recent app and infra logs
+  - name: ai
+    description: AI powered analysis and interactive assistant
+  - name: postmortems
+    description: Generate and view post incident reports
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Is the platform healthy
+      description: Just a fast check, to see if InferOps is up and running
+      responses:
+        "200":
+          description: All good, nothing weird
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /incidents:
+    get:
+      operationId: listIncidents
+      tags: [incidents]
+      summary: See all your incidents,
+      description: Browse through active, resolved, or maybe, all incidents in your system
+parameters:
+        - name: status
+          in: query
+          description: Filter by status. Default value shows all incidents.
+          schema:
+            type: string
+            enum: [active, resolved, all]
+        - name: limit
+          in: query
+          description: Number of incidents to show. Default value shows all incidents.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Your list of incidents
+
+    post:
+      operationId: createIncident
+      tags: [incidents]
+      summary: Report a new incident
+      description: Create a new incident if you encounter any issues with your infrastructure
+
+  /incidents/{id}/analysis:
+    get:
+      operation: getIncidentAnalysis
+      tags: [ai]
+      summary: Get root cause analysis for the incident
+      description: |
+        AI will find out the exact cause of an incident by analyzing various metrics related to the infrastructure and suggest ways to prevent such problems in the future
+
+components:
+  schemas:
+    Incident:
+      type: object
+      description: |
+        An object representing incident or outage. Provides information about date/time of the incident, services it affected, and current status
+      properties:
+        id:
+          type: integer
+          description: Unique identifier of the incident
+        title:
+          type: string
+          description: Description of the incident
+          examples: "API Gateway timeout spike"
+        affectedServices:
+          type: array
+          items:
+            type: string
+            description: List of services that were impacted
+            example: ["api-gateway", "user-service", "payment-service"]
+        
